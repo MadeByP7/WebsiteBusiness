@@ -1,0 +1,373 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>MadeByP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout concept: a dark HUD control room (grid, corner brackets, readouts) with warm paper sticky notes pinned over it, plus a ruled-notebook template preview. Everything is set in Comic Sans MS. */
+:root {
+  --bg: #eef1f6;
+  --bg-2: #e3e8f0;
+  --panel: rgba(255,255,255,.72);
+  --fg: #0e1626;
+  --muted: #4b5870;
+  --line: rgba(14,22,38,.14);
+  --grid: rgba(14,22,38,.06);
+  --accent: #0a74c9;
+  --accent-ink: #ffffff;
+  --glow: rgba(10,116,201,.25);
+  --note-ink: #2a2418;
+  --paper: #fbf8ef;
+  --paper-ink: #1f2a44;
+  --paper-line: rgba(70,110,190,.32);
+  --paper-margin: rgba(214,70,70,.55);
+  --font: "Comic Sans MS", "Comic Sans", "Chalkboard SE", "Comic Neue", cursive, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #070b13; --bg-2: #0c1220; --panel: rgba(16,24,40,.72); --fg: #e8eefb; --muted: #9aa9c4;
+    --line: rgba(120,160,220,.2); --grid: rgba(120,160,220,.07); --accent: #4fd8ff; --accent-ink: #04202b; --glow: rgba(79,216,255,.28);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #070b13; --bg-2: #0c1220; --panel: rgba(16,24,40,.72); --fg: #e8eefb; --muted: #9aa9c4;
+  --line: rgba(120,160,220,.2); --grid: rgba(120,160,220,.07); --accent: #4fd8ff; --accent-ink: #04202b; --glow: rgba(79,216,255,.28);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; font-family: var(--font); }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 16px;
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+a { color: inherit; }
+h1, h2, h3, h4 { line-height: 1.12; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; }
+.mono { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px));
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.logo { font-weight: 700; font-size: 20px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.logo i { width: 12px; height: 12px; background: var(--accent); box-shadow: 0 0 14px var(--glow); display: inline-block; transform: rotate(45deg); }
+.logo b { color: var(--accent); font-weight: 700; }
+.nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.nav a { text-decoration: none; font-size: 14px; color: var(--muted); padding: 6px 10px; border-radius: 6px; }
+.nav a:hover { color: var(--fg); background: var(--line); }
+.theme { font-size: 12px; background: transparent; color: var(--muted); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+.theme:hover { color: var(--fg); border-color: var(--accent); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; padding-block: 64px 56px; }
+.hero > * { min-width: 0; }
+.status { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; background: var(--panel); }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3be28a; box-shadow: 0 0 10px #3be28a; }
+.hero h1 { font-size: clamp(36px, 6.2vw, 70px); font-weight: 700; letter-spacing: -.01em; margin-top: 22px; }
+.hero h1 span { color: var(--accent); }
+.hero p.lead { font-size: 18px; color: var(--muted); max-width: 52ch; margin-top: 22px; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 30px; }
+.btn { font-weight: 700; font-size: 15px; text-decoration: none; padding: 12px 22px; border-radius: 8px; border: 1px solid var(--accent); cursor: pointer; display: inline-block; }
+.btn.solid { background: var(--accent); color: var(--accent-ink); box-shadow: 0 0 24px var(--glow); }
+.btn.solid:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--accent); }
+
+/* hud board */
+.board { position: relative; height: 440px; border: 1px solid var(--line); background: var(--panel); border-radius: 4px; overflow: hidden; touch-action: none; }
+.board::before, .board::after, .bk::before, .bk::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--accent); pointer-events: none; z-index: 3; }
+.board::before { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+.board::after { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+.bk::before { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+.bk::after { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+.board .readout { position: absolute; left: 20px; bottom: 18px; z-index: 3; pointer-events: none; }
+.board .readout.r { left: auto; right: 22px; top: 18px; bottom: auto; }
+
+/* sticky notes */
+.note {
+  --c: #ffe66d; --rot: -2deg;
+  position: relative;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--c) 100%, #fff 12%), var(--c));
+  color: var(--note-ink);
+  padding: 26px 18px 18px;
+  font-size: 20px; line-height: 1.2; font-weight: 700;
+  transform: rotate(var(--rot));
+  box-shadow: 0 1px 1px rgba(0,0,0,.2), 8px 14px 22px rgba(0,0,0,.28);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+}
+.note::before { content: ""; position: absolute; top: -4px; left: 50%; width: 74px; height: 22px; transform: translateX(-50%) rotate(-3deg); background: rgba(255,255,255,.55); box-shadow: 0 0 0 1px rgba(0,0,0,.05); }
+.note small { display: block; margin-top: 8px; font-size: 13px; font-weight: 400; line-height: 1.45; opacity: .88; }
+.note .tag { display: block; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; opacity: .6; margin-bottom: 6px; font-weight: 700; }
+.y { --c: #ffe66d; } .p { --c: #ff9ec7; } .g { --c: #8ff0b8; } .o { --c: #ffb86b; } .b { --c: #8fd3ff; }
+
+.board .note { position: absolute; width: 190px; cursor: grab; user-select: none; z-index: 2; animation: drop .7s cubic-bezier(.2,.9,.3,1.2) both; }
+.board .note.drag { cursor: grabbing; z-index: 5; box-shadow: 0 1px 1px rgba(0,0,0,.2), 14px 22px 34px rgba(0,0,0,.4); }
+@keyframes drop { from { transform: translateY(-40px) rotate(calc(var(--rot) - 6deg)); } }
+
+/* sections */
+section { padding-block: 56px; }
+.head { display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; max-width: 640px; }
+.head h2 { font-size: clamp(28px, 4.2vw, 42px); letter-spacing: -.01em; }
+.head p { color: var(--muted); }
+
+.services { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 34px 26px; padding-top: 8px; }
+.services .note { min-width: 0; min-height: 230px; transition: transform .25s, box-shadow .25s; }
+.services .note:hover { transform: rotate(0deg) translateY(-6px) scale(1.03); box-shadow: 0 1px 1px rgba(0,0,0,.2), 12px 22px 30px rgba(0,0,0,.35); z-index: 2; }
+.note svg { width: 30px; height: 30px; stroke: var(--note-ink); fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; display: block; margin-bottom: 10px; opacity: .85; }
+
+.panel { position: relative; border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(6px); border-radius: 4px; padding: 28px; }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.step { position: relative; padding: 0 22px 0 0; min-width: 0; }
+.step::before { content: ""; position: absolute; left: 0; right: 0; top: 11px; height: 1px; background: var(--line); }
+.step i { position: relative; display: block; width: 23px; height: 23px; border: 1px solid var(--accent); background: var(--bg-2); transform: rotate(45deg); margin-bottom: 22px; }
+.step i::after { content: ""; position: absolute; inset: 6px; background: var(--accent); }
+.step h3 { font-size: 19px; margin-bottom: 8px; }
+.step p { color: var(--muted); font-size: 15px; }
+
+/* templates */
+.tpl-group { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.tpl-group h3 { font-size: clamp(22px, 3vw, 30px); }
+.tpl-group .idx { color: var(--accent); font-weight: 700; font-size: clamp(22px, 3vw, 30px); }
+.tpl-item { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 26px 0; padding-left: 4px; }
+.tpl-item .idx { color: var(--accent); font-weight: 700; font-size: 20px; }
+.tpl-item h4 { font-size: 20px; }
+.tpl-item .mono { border: 1px solid var(--line); padding: 3px 10px; border-radius: 999px; }
+.tpl { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 40px; align-items: start; }
+.tpl > * { min-width: 0; }
+
+.nb {
+  position: relative;
+  background-color: var(--paper);
+  color: var(--paper-ink);
+  padding: 30px 26px 30px 84px;
+  border-radius: 4px 12px 12px 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.25), 12px 20px 36px rgba(0,0,0,.3);
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 35px, var(--paper-line) 35px, var(--paper-line) 36px);
+  background-position: 0 6px;
+  line-height: 36px;
+  transform: rotate(-.6deg);
+}
+.nb::before { content: ""; position: absolute; top: 0; bottom: 0; left: 64px; width: 2px; background: var(--paper-margin); }
+.nb .rings { position: absolute; left: 14px; top: 20px; bottom: 20px; width: 34px; background: radial-gradient(circle at 17px 50%, var(--bg) 0 6px, transparent 7px) 0 0 / 34px 44px repeat-y; }
+.nb .rings::after { content: ""; position: absolute; left: -10px; width: 44px; top: 0; bottom: 0; background: repeating-linear-gradient(to bottom, transparent 0, transparent 19px, #8b94a6 19px, #8b94a6 25px, transparent 25px, transparent 44px); border-radius: 3px; opacity: .85; clip-path: inset(0 0 0 0 round 3px); }
+.nb .tab { position: absolute; right: -8px; width: 22px; height: 42px; border-radius: 0 8px 8px 0; box-shadow: 2px 2px 5px rgba(0,0,0,.25); }
+.nb .tab:nth-of-type(1) { top: 40px; background: #ff9ec7; }
+.nb .tab:nth-of-type(2) { top: 96px; background: #8ff0b8; }
+.nb .tab:nth-of-type(3) { top: 152px; background: #8fd3ff; }
+.nb .tab:nth-of-type(4) { top: 208px; background: #ffe66d; }
+.nb h5 { font-size: 30px; line-height: 36px; margin: 0; font-weight: 700; }
+.nb .meta { font-size: 15px; color: color-mix(in srgb, var(--paper-ink) 70%, transparent); }
+.nb ul { list-style: none; margin: 0; padding: 0; font-size: 18px; }
+.nb li { display: flex; align-items: baseline; gap: 12px; }
+.nb li::before { content: ""; flex: none; width: 14px; height: 14px; border: 2px solid var(--paper-ink); border-radius: 3px; transform: translateY(2px); }
+.nb li:nth-child(odd)::before { background: linear-gradient(135deg, transparent 45%, var(--paper-ink) 45% 58%, transparent 58%); }
+.nb .scribble { font-size: 14px; color: color-mix(in srgb, var(--paper-ink) 65%, transparent); }
+
+.tpl-side { display: flex; flex-direction: column; gap: 26px; }
+.tpl-side .note { --rot: 1.5deg; max-width: 340px; }
+.tpl-side h4 { font-size: 18px; margin-bottom: 10px; }
+.tpl-side p { color: var(--muted); }
+.pages { display: flex; flex-wrap: wrap; gap: 8px; }
+.pages span { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 6px 14px; font-size: 14px; }
+
+footer { border-top: 1px solid var(--line); padding-block: 28px 40px; margin-top: 24px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; padding-block: 40px 36px; }
+  .tpl { grid-template-columns: 1fr; gap: 32px; }
+  .steps { grid-template-columns: 1fr 1fr; gap: 34px 0; }
+  .nav a { display: none; }
+}
+@media (max-width: 520px) {
+  .steps { grid-template-columns: 1fr; }
+  .board { height: 400px; }
+  .panel { padding: 20px; }
+  .nb { padding: 26px 18px 26px 70px; }
+  .nb::before { left: 54px; }
+  .nb .rings { left: 8px; }
+  .nb h5 { font-size: 24px; }
+  .nb .tab { right: -4px; width: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .board .note { animation: none; }
+  .services .note { transition: none; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top"><i></i><span>Made<b>By</b>P</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#process">Process</a>
+      <a href="#templates">Templates</a>
+      <button class="theme" id="theme" type="button" aria-label="Switch colour theme">THEME</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <div class="status mono">Local studio &middot; taking projects</div>
+      <h1>Websites, video and visuals, <span>made by P.</span></h1>
+      <p class="lead">MadeByP is a small local studio. I build websites, cut short videos, design presentations and make posters and ads for businesses that want to look sharp and move fast.</p>
+      <div class="cta">
+        <a class="btn solid" href="#templates">See templates</a>
+        <a class="btn ghost" href="#services">See what I make</a>
+      </div>
+    </div>
+
+    <div class="board bk" id="board" aria-label="Pinboard of services. Notes can be dragged.">
+      <div class="mono readout">drag the notes</div>
+      <div class="mono readout r">board / 05 pinned</div>
+      <div class="note y" style="--rot:-4deg; left:7%; top:9%;"><span class="tag">pinned</span>Build website</div>
+      <div class="note p" style="--rot:3deg; left:47%; top:5%; animation-delay:.12s;"><span class="tag">pinned</span>Short video edits</div>
+      <div class="note g" style="--rot:-2deg; left:12%; top:42%; animation-delay:.24s;"><span class="tag">pinned</span>Slide decks that land</div>
+      <div class="note b" style="--rot:4deg; left:50%; top:40%; animation-delay:.36s;"><span class="tag">pinned</span>Posters &amp; ads</div>
+      <div class="note o" style="--rot:-3deg; left:30%; top:70%; animation-delay:.48s; width:210px;"><span class="tag">pinned</span>Record + edit, start to finish</div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="head">
+      <span class="mono">What I do</span>
+      <h2>Five things, done properly.</h2>
+      <p>Pick one or combine them. A launch can need a site, a short video and a poster, and one person handling all of it keeps the look consistent.</p>
+    </div>
+    <div class="services">
+      <article class="note y" style="--rot:-1.8deg;">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8M12 18v3"/></svg>
+        Build website
+        <small>Clean, fast sites for your business, set up to look right on phones first.</small>
+      </article>
+      <article class="note p" style="--rot:1.6deg;">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+        Short video edits
+        <small>Reels, promos and clips trimmed, paced and captioned for the platform they will play on.</small>
+      </article>
+      <article class="note g" style="--rot:-1deg;">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8M7 12l3-3 3 2 4-4"/></svg>
+        Presentations
+        <small>PPT decks with a clear story and a consistent look, ready to present.</small>
+      </article>
+      <article class="note o" style="--rot:2deg;">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="4"/><path d="M4 8h3l2-3h6l2 3h3v11H4z"/></svg>
+        Record &amp; edit
+        <small>Basic video recording and editing, from filming to a finished cut.</small>
+      </article>
+      <article class="note b" style="--rot:-2.2deg;">
+        <svg viewBox="0 0 24 24"><path d="M5 3h14v18H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Posters &amp; ads
+        <small>Posters and advertisements for print and social, built to be read in two seconds.</small>
+      </article>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="head">
+      <span class="mono">How a project runs</span>
+      <h2>Four steps, no surprises.</h2>
+    </div>
+    <div class="panel bk">
+      <div class="steps">
+        <div class="step"><i></i><h3>Brief</h3><p>You tell me what you need, who it is for and when you need it.</p></div>
+        <div class="step"><i></i><h3>Draft</h3><p>I send a first version so you can react to something real.</p></div>
+        <div class="step"><i></i><h3>Revise</h3><p>We adjust together until it says what you want it to say.</p></div>
+        <div class="step"><i></i><h3>Deliver</h3><p>You get the final files, ready to publish, present or print.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="templates">
+    <div class="head">
+      <span class="mono">Ready-made starts</span>
+      <h2>Templates</h2>
+      <p>Pick a template as your starting point and I customise it with your name, work and colours.</p>
+    </div>
+
+    <div class="tpl-group"><span class="idx">1.</span><h3>Templates for portfolio</h3></div>
+    <div class="tpl-item"><span class="idx">a.</span><h4>Student portfolio</h4><span class="mono">Notebook themed</span></div>
+
+    <div class="tpl-side">
+      <div class="note y">
+        <span class="tag">template a</span>
+        Student portfolio
+        <small>A portfolio that looks like a school notebook: ruled paper, a red margin line, spiral binding and coloured tabs.</small>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="mono">MadeByP &middot; websites, video, slides, posters</span>
+    <span class="mono">Made by hand</span>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  // theme toggle
+  var root = document.documentElement;
+  $("theme").addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+
+  // draggable notes on the hero board
+  var board = $("board");
+  var z = 5;
+  Array.prototype.forEach.call(board.querySelectorAll(".note"), function (n) {
+    var sx, sy, ox, oy, on = false;
+    n.addEventListener("pointerdown", function (e) {
+      on = true;
+      var b = board.getBoundingClientRect();
+      var r = n.getBoundingClientRect();
+      sx = e.clientX; sy = e.clientY;
+      ox = r.left - b.left; oy = r.top - b.top;
+      n.style.left = ox + "px"; n.style.top = oy + "px";
+      n.style.animation = "none";
+      n.style.zIndex = ++z;
+      n.classList.add("drag");
+      try { n.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+    n.addEventListener("pointermove", function (e) {
+      if (!on) return;
+      var b = board.getBoundingClientRect();
+      var x = Math.max(0, Math.min(b.width - n.offsetWidth, ox + e.clientX - sx));
+      var y = Math.max(0, Math.min(b.height - n.offsetHeight, oy + e.clientY - sy));
+      n.style.left = x + "px"; n.style.top = y + "px";
+    });
+    function end() { on = false; n.classList.remove("drag"); }
+    n.addEventListener("pointerup", end);
+    n.addEventListener("pointercancel", end);
+  });
+})();
+</script>
+
+</body></html>
