@@ -189,6 +189,9 @@ section { padding-block: 56px; }
 a.note { display: block; text-decoration: none; cursor: pointer; transition: transform .25s, box-shadow .25s; }
 a.note:hover, a.note:focus-visible { transform: rotate(0deg) translateY(-6px) scale(1.03); box-shadow: 0 1px 1px rgba(0,0,0,.2), 12px 22px 30px rgba(0,0,0,.35); }
 a.note .open { display: block; margin-top: 12px; font-size: 13px; font-weight: 700; }
+.note .val { display: block; margin-top: 10px; font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
+.contact-grid { max-width: 560px; }
+.contact-grid .note { min-height: 190px; }
 .tpl-side h4 { font-size: 18px; margin-bottom: 10px; }
 .tpl-side p { color: var(--muted); }
 .pages { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -226,6 +229,7 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; margin-top
       <a href="#services">Services</a>
       <a href="#process">Process</a>
       <a href="#templates">Templates</a>
+      <a href="#contact">Contact</a>
       <button class="theme" id="theme" type="button" aria-label="Switch colour theme">THEME</button>
     </nav>
   </div>
@@ -314,12 +318,50 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; margin-top
     <div class="tpl-group"><span class="idx">1.</span><h3>Templates for portfolio</h3></div>
     <div class="tpl-item"><span class="idx">a.</span><h4>Student portfolio</h4><span class="mono">Notebook themed</span></div>
 
-    <div class="tpl-side">
-      <a class="note y" href="./TempletA%28StudentPortfolio%29.html">
+    <div class="services">
+      <a class="note y" style="--rot:-1.8deg;" href="./TempletA%28StudentPortfolio%29.html">
         <span class="tag">template a</span>
         Student portfolio
         <small>A portfolio that looks like a school notebook: ruled paper, a red margin line, spiral binding and coloured tabs.</small>
         <span class="open">Open template &rarr;</span>
+      </a>
+      <a class="note p" style="--rot:1.6deg;" href="./TempletB%28MinimalDarkPortfolio%29.html">
+        <span class="tag">template b</span>
+        Minimal dark portfolio
+        <small>A simple portfolio on a dark background, with a clean layout that keeps the focus on your work.</small>
+        <span class="open">Open template &rarr;</span>
+      </a>
+      <a class="note g" style="--rot:-1deg;" href="./TempletC%28Bold%20Colourful%20Portfolio%29.html">
+        <span class="tag">template c</span>
+        Bold colourful portfolio
+        <small>A bright, bold portfolio for people who want their work to stand out.</small>
+        <span class="open">Open template &rarr;</span>
+      </a>
+      <a class="note b" style="--rot:2deg;" href="./TempletD%28CleanSidebar%29.html">
+        <span class="tag">template d</span>
+        Clean sidebar
+        <small>A tidy portfolio with a sidebar menu, so visitors can jump between sections quickly.</small>
+        <span class="open">Open template &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="head">
+      <span class="mono">Get in touch</span>
+      <h2>Contact</h2>
+      <p>Tell me what you need and when you need it. Send an email or message me on Instagram.</p>
+    </div>
+    <div class="services contact-grid">
+      <a class="note o" style="--rot:-1.6deg;" href="mailto:madebyp7@gmail.com">
+        <span class="tag">mail</span>
+        Email me
+        <span class="val">madebyp7@gmail.com</span>
+      </a>
+      <a class="note y" style="--rot:1.8deg;" href="https://www.instagram.com/madebyp7/" target="_blank" rel="noopener">
+        <span class="tag">instagram</span>
+        Message me
+        <span class="val">@madebyp7</span>
       </a>
     </div>
   </section>
