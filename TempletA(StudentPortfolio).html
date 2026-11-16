@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!--
+  NOTEBOOK PORTFOLIO TEMPLATE (single file)
+  Search for "YOUR" or "[ ... ]" to find everything you need to replace.
+  Colours: edit the variables in :root.  Images: replace src="..." with your own files.
+  Add a project/skill/note: copy one block and edit it.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>[YOUR NAME] — [YOUR TITLE]</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF6EB; --paper-line:#CBDCEA; --margin-red:#E3A3A3; --spiral-bg:#EFE6D3; --spiral-hole:#B9AF98;
+  --ink:#2C2A25; --ink-dim:#6D6656; --pencil:#9A917C; --tape:rgba(250,246,235,.75);
+  --note-ink:#2C2A25; --note-ink-dim:#6D6656;
+  --yellow:#FFE993; --yellow-deep:#F4CE4E; --pink:#FFC7D6; --pink-deep:#F49DB6;
+  --blue:#C3E4F7; --green:#CDEFC8; --orange:#FFD3A6; --purple:#DDCBF5; --teal:#B9E8DD;
+}
+body.dark{
+  --paper:#1E1C19; --paper-line:rgba(255,255,255,.055); --margin-red:#C97D7D; --spiral-bg:#262320;
+  --spiral-hole:#524B3E; --ink:#EDE8DC; --ink-dim:#ABA08C; --pencil:#6E6656; --tape:rgba(0,0,0,.3);
+}
+body.dark nav.links a, body.dark .theme-toggle, body.dark .hero-meta div, body.dark .tl-dur{background:rgba(0,0,0,.28)}
+body.dark .add-project{background:rgba(0,0,0,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--paper) 27px,var(--paper-line) 28px);
+  background-size:100% 28px; color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif; font-size:16px; line-height:1.65; padding-left:52px; position:relative;
+}
+::selection{background:var(--yellow-deep);color:var(--ink)}
+a{color:inherit}
+
+/* notebook decorations */
+.spiral{position:fixed;top:0;left:0;bottom:0;width:52px;background:var(--spiral-bg);
+  background-image:radial-gradient(circle,var(--spiral-hole) 0 5px,transparent 5.5px);
+  background-size:100% 42px;background-position:center top;background-repeat:repeat-y;
+  box-shadow:inset -6px 0 10px -6px rgba(0,0,0,.18);z-index:20}
+.margin-line{position:fixed;top:0;bottom:0;left:88px;width:1px;background:var(--margin-red);opacity:.55;z-index:1}
+.wrap{max-width:900px;margin:0 auto;padding:0 32px 0 44px;position:relative;z-index:2}
+.progress-bar{position:fixed;top:0;left:52px;right:0;height:3px;width:0;background:var(--pink-deep);z-index:100;transition:width .1s linear}
+.hero-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:0}
+
+/* nav */
+header.site{position:sticky;top:0;z-index:15;padding-top:14px}
+.nav-inner{max-width:900px;margin:0 auto;padding:0 32px 0 44px;display:flex;justify-content:space-between;align-items:flex-end;position:relative}
+.nav-name{font-family:'Caveat',cursive;font-weight:700;font-size:1.7rem;padding-bottom:10px}
+.nav-right{display:flex;align-items:flex-end;gap:10px}
+nav.links{display:flex;gap:6px}
+nav.links a{font-family:'IBM Plex Mono',monospace;font-size:.78rem;text-decoration:none;color:var(--ink-dim);
+  padding:8px 14px 7px;border-radius:6px 6px 0 0;border:1px solid var(--paper-line);border-bottom:none;
+  transform:translateY(4px);transition:transform .18s,color .18s}
+nav.links a:hover{transform:translateY(0);color:var(--ink)}
+nav.links a.active{transform:translateY(-3px);color:var(--ink);box-shadow:0 4px 10px -4px rgba(0,0,0,.25)}
+.t-blue{background:var(--blue)}.t-purple{background:var(--purple)}.t-yellow{background:var(--yellow)}
+.t-pink{background:var(--pink)}.t-teal{background:var(--teal)}.t-green{background:var(--green)}.t-orange{background:var(--orange)}
+.theme-toggle{font-size:1rem;background:rgba(255,255,255,.5);border:1px dashed var(--pencil);color:var(--ink);
+  width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:32px;height:32px;background:none;border:none;cursor:pointer}
+.nav-toggle span{display:block;height:2px;background:var(--ink);transition:.25s}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:680px){
+  .nav-toggle{display:flex}
+  nav.links{position:absolute;top:100%;right:0;flex-direction:column;gap:8px;max-height:0;overflow:hidden;transition:max-height .3s;padding-top:8px}
+  nav.links.open{max-height:360px}
+  nav.links a{transform:none;border-radius:6px;border-bottom:1px solid var(--paper-line)}
+}
+
+/* hero */
+.hero{padding:64px 0 80px;display:grid;grid-template-columns:1.3fr .9fr;gap:40px;align-items:center;position:relative}
+.hero-content{position:relative;z-index:1}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--ink-dim);margin-bottom:16px;display:inline-block;
+  background:var(--tape);border:1px dashed var(--pencil);padding:5px 12px;transform:rotate(-1deg)}
+h1.display{font-family:'Caveat',cursive;font-weight:700;font-size:clamp(2.8rem,6.4vw,4.6rem);line-height:1.05;max-width:13ch}
+.highlight{background:linear-gradient(var(--yellow-deep),var(--yellow-deep)) no-repeat 0 78%/100% .55em;padding:0 2px}
+.hero-sub{margin-top:22px;max-width:52ch;font-size:1.05rem;color:var(--ink-dim)}
+.rotate-word{color:var(--ink);font-weight:600;display:inline-block;min-width:9ch;border-bottom:2px solid var(--pink-deep)}
+.hero-meta{margin-top:30px;display:flex;gap:14px;flex-wrap:wrap}
+.hero-meta div{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--ink-dim);background:rgba(255,255,255,.55);border:1px solid var(--paper-line);padding:6px 12px}
+.hero-meta span{color:var(--ink);font-weight:600}
+.hero-photo-wrap{justify-self:center;position:relative;z-index:1}
+.hero-photo-frame{position:relative;width:min(260px,78vw);background:#fff;padding:14px 14px 46px;
+  box-shadow:0 18px 34px -14px rgba(0,0,0,.35);transform:rotate(-3.5deg);transition:transform .35s}
+.hero-photo-frame:hover{transform:rotate(0) translateY(-4px)}
+.hero-photo{width:100%;aspect-ratio:1/1.02;object-fit:cover;display:block;background:#ddd}
+.hero-photo-tape{position:absolute;top:-14px;left:50%;width:90px;height:26px;margin-left:-45px;
+  background:repeating-linear-gradient(-45deg,rgba(255,255,255,.65),rgba(255,255,255,.65) 4px,rgba(255,255,255,.35) 4px,rgba(255,255,255,.35) 8px);
+  box-shadow:0 2px 4px rgba(0,0,0,.15);transform:rotate(-4deg)}
+.hero-photo-caption{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-family:'Caveat',cursive;font-size:1.3rem;color:#6D6656}
+
+/* sections */
+section{padding:56px 0}
+h2.section-title{font-family:'Caveat',cursive;font-weight:700;font-size:2.1rem;margin-bottom:6px;display:inline-block}
+.title-underline{display:block;width:120px;margin-bottom:28px}
+p.lede{max-width:60ch;color:var(--ink-dim);font-size:.98rem;margin-bottom:8px}
+.reveal,.reveal-left,.reveal-right{opacity:0;transition:opacity .65s cubic-bezier(.25,.8,.3,1),transform .65s cubic-bezier(.25,.8,.3,1)}
+.reveal{transform:translateY(28px)}.reveal-left{transform:translateX(-50px)}.reveal-right{transform:translateX(50px)}
+.in-view{opacity:1!important;transform:none!important}
+.about-body{max-width:60ch}.about-body p+p{margin-top:14px}
+
+/* sticky notes */
+.sticky-note{position:relative;padding:26px 22px 22px;box-shadow:0 10px 18px -10px rgba(0,0,0,.3);transition:transform .25s,box-shadow .25s;color:var(--note-ink)}
+.sticky-note::before{content:"";position:absolute;top:-13px;left:50%;width:64px;height:22px;margin-left:-32px;
+  background:repeating-linear-gradient(-45deg,rgba(255,255,255,.65),rgba(255,255,255,.65) 4px,rgba(255,255,255,.35) 4px,rgba(255,255,255,.35) 8px);
+  box-shadow:0 2px 3px rgba(0,0,0,.12);transform:rotate(-3deg)}
+.sticky-note:hover{transform:rotate(0) translateY(-6px) scale(1.015)!important;box-shadow:0 20px 26px -14px rgba(0,0,0,.38);z-index:5}
+.tilt-a{transform:rotate(-2deg)}.tilt-b{transform:rotate(1.6deg)}.tilt-c{transform:rotate(-1deg)}.tilt-d{transform:rotate(2.2deg)}
+.note-blue{background:var(--blue)}.note-yellow{background:var(--yellow)}.note-green{background:var(--green)}
+.note-pink{background:var(--pink)}.note-orange{background:var(--orange)}.note-purple{background:var(--purple)}.note-teal{background:var(--teal)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:34px 26px;margin-top:20px}
+.note h3,.sticky-note h3{font-family:'Caveat',cursive;font-size:1.4rem;font-weight:700;margin-bottom:8px}
+.sticky-note p{color:var(--note-ink-dim);font-size:.9rem}
+.tag{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--note-ink-dim);display:block;margin-bottom:6px}
+a.sticky-note{text-decoration:none;display:block;cursor:pointer}
+
+/* skills */
+.skill-list{list-style:none;margin-bottom:16px}
+.skill-list li{font-size:.93rem;padding:3px 0}
+.skill-list li::before{content:"— ";color:var(--note-ink-dim)}
+.bar-track{height:12px;border-bottom:2px dashed rgba(44,42,37,.35);position:relative;margin-top:6px}
+.bar-fill{position:absolute;bottom:0;left:0;height:10px;width:0;mix-blend-mode:multiply;transition:width 1s cubic-bezier(.16,1,.3,1);
+  background:linear-gradient(90deg,rgba(44,42,37,.4),rgba(44,42,37,.8) 50%,rgba(44,42,37,.4));background-size:220% 100%;animation:shimmer 2.2s linear infinite}
+@keyframes shimmer{0%{background-position:220% 0}100%{background-position:-220% 0}}
+.bar-label{display:flex;justify-content:space-between;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--note-ink-dim)}
+
+/* education / certificates */
+.logo-wrap{background:#fff;display:inline-block;padding:6px 10px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,.15);margin-bottom:12px}
+.logo{display:block;height:38px;width:auto;max-width:150px;object-fit:contain}
+.cert-img-wrap{background:#fff;padding:6px;box-shadow:0 2px 6px rgba(0,0,0,.18);margin-bottom:14px}
+.cert-img{display:block;width:100%;height:auto}
+
+/* timeline */
+.timeline{margin-top:16px;border-left:2px dashed var(--pencil);padding-left:34px;display:flex;flex-direction:column;gap:30px}
+.tl-item{position:relative;max-width:440px}
+.tl-item::after{content:"";position:absolute;left:-42px;top:24px;width:12px;height:12px;border-radius:50%;background:var(--pink-deep);border:2px solid var(--paper);box-shadow:0 0 0 1.5px var(--pencil)}
+.tl-item h3{font-family:'Caveat',cursive;font-weight:700;font-size:1.35rem;margin-bottom:4px}
+.tl-dur{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--ink-dim);margin-bottom:8px;display:inline-block;background:rgba(255,255,255,.5);padding:2px 8px;border:1px solid var(--paper-line)}
+.tl-item p{color:var(--ink-dim);font-size:.93rem}
+
+.add-project{border:2px dashed var(--pencil);background:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;
+  min-height:150px;color:var(--ink-dim);font-family:'Caveat',cursive;font-size:1.3rem;text-align:center;padding:26px}
+.contact p{font-family:'IBM Plex Mono',monospace;font-size:.85rem;word-break:break-word}
+#email-link.copied::after{content:"copied!";position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-family:'Caveat',cursive;
+  font-size:1.1rem;background:var(--yellow);padding:2px 10px;border:1px solid var(--paper-line);z-index:6}
+footer{padding:36px 0 60px;color:var(--ink-dim);font-size:.82rem;font-family:'IBM Plex Mono',monospace}
+
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero-photo-wrap{order:-1;justify-self:start}.hero-photo-frame{width:190px}}
+@media(max-width:600px){body{padding-left:34px}.spiral{width:34px}.margin-line{left:58px}.wrap,.nav-inner{padding:0 20px 0 28px}.progress-bar{left:34px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sticky-note,.reveal,.reveal-left,.reveal-right,.bar-fill,.hero-photo-frame{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="spiral"></div>
+<div class="margin-line"></div>
+<canvas class="hero-canvas" id="hero-canvas"></canvas>
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- NAV: each href must match a section id below -->
+<header class="site">
+  <div class="nav-inner">
+    <div class="nav-name">[YOUR NAME]'s Notebook</div>
+    <div class="nav-right">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" type="button">🌙</button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="links" id="nav-links">
+        <a class="t-blue" href="#about">About</a>
+        <a class="t-purple" href="#education">Education</a>
+        <a class="t-yellow" href="#skills">Skills</a>
+        <a class="t-pink" href="#training">Training</a>
+        <a class="t-teal" href="#certifications">Certifications</a>
+        <a class="t-blue" href="#social">Social</a>
+        <a class="t-green" href="#projects">Projects</a>
+        <a class="t-orange" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-content">
+      <div class="eyebrow">[YOUR DEGREE] · [YOUR UNIVERSITY]</div>
+      <h1 class="display">[Your headline] <span class="highlight">[highlighted words.]</span></h1>
+      <p class="hero-sub">I'm [YOUR NAME], a [student/developer/designer] focused on [YOUR FIELD]. Right now I'm learning by <span class="rotate-word" id="rotate-word">building things</span>.</p>
+      <div class="hero-meta">
+        <div>Based in <span>[Country]</span></div>
+        <div>Focus <span>[Your Focus]</span></div>
+        <div>Status <span>[Open to work]</span></div>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <div class="hero-photo-frame">
+        <div class="hero-photo-tape"></div>
+        <img class="hero-photo" src="your-photo.jpg" alt="Portrait of [YOUR NAME]">
+        <div class="hero-photo-caption">[YOUR NAME]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2 class="section-title reveal">About</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#F49DB6" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <div class="about-body reveal">
+      <p>[First paragraph: who you are and what you study or do.]</p>
+      <p>[Second paragraph: what you are working on and what opportunities you want.]</p>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <h2 class="section-title reveal">Education</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#B79AE0" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[Short intro line.]</p>
+    <div class="grid reveal">
+      <div class="sticky-note note-purple tilt-a">
+        <div class="logo-wrap"><img class="logo" src="school-logo.png" alt="School logo"></div>
+        <h3>[Level / Grades]</h3>
+        <p>[School name]</p>
+      </div>
+      <div class="sticky-note note-blue tilt-b">
+        <h3>[Level]</h3>
+        <p>[College name]</p>
+      </div>
+      <div class="sticky-note note-green tilt-c">
+        <h3>[Degree] (Ongoing)</h3>
+        <p>[University — Department]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS: data-level = 0 to 100 (keep the % text in sync) -->
+  <section id="skills">
+    <h2 class="section-title reveal">Skills</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#8FC7E8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[What you work with, grouped by area.]</p>
+    <div class="grid reveal">
+      <div class="sticky-note note-blue tilt-a">
+        <h3>[Skill Area 1]</h3>
+        <ul class="skill-list"><li>[Skill]</li><li>[Skill]</li><li>[Skill]</li></ul>
+        <div class="bar-track"><div class="bar-fill" data-level="70"></div></div>
+        <div class="bar-label"><span>[Level label]</span><span>70%</span></div>
+      </div>
+      <div class="sticky-note note-yellow tilt-b">
+        <h3>[Skill Area 2]</h3>
+        <ul class="skill-list"><li>[Skill]</li><li>[Skill]</li></ul>
+        <div class="bar-track"><div class="bar-fill" data-level="50"></div></div>
+        <div class="bar-label"><span>[Level label]</span><span>50%</span></div>
+      </div>
+      <div class="sticky-note note-green tilt-c">
+        <h3>[Skill Area 3]</h3>
+        <ul class="skill-list"><li>[Skill]</li><li>[Skill]</li></ul>
+        <div class="bar-track"><div class="bar-fill" data-level="60"></div></div>
+        <div class="bar-label"><span>[Level label]</span><span>60%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINING -->
+  <section id="training">
+    <h2 class="section-title reveal">Training</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#F4CE4E" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[A timeline of hands-on training.]</p>
+    <div class="timeline reveal">
+      <div class="tl-item"><span class="tl-dur">[Duration]</span><h3>[Course name]</h3><p>[Provider and short description.]</p></div>
+      <div class="tl-item"><span class="tl-dur">[Duration]</span><h3>[Course name]</h3><p>[Provider and short description.]</p></div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <h2 class="section-title reveal">Certifications</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#7DCBB8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[Certificates earned so far.]</p>
+    <div class="grid reveal">
+      <div class="sticky-note note-teal tilt-b">
+        <div class="cert-img-wrap"><img class="cert-img" src="certificate-1.jpg" alt="Certificate 1"></div>
+        <h3>[Certificate title]</h3>
+        <p>[What it was awarded for.]</p>
+      </div>
+      <div class="sticky-note note-purple tilt-c">
+        <div class="cert-img-wrap"><img class="cert-img" src="certificate-2.jpg" alt="Certificate 2"></div>
+        <h3>[Certificate title]</h3>
+        <p>[What it was awarded for.]</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL EXPERIENCE -->
+  <section id="social">
+    <h2 class="section-title reveal">Social Experience</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#8FC7E8" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[What you've done outside the classroom.]</p>
+    <div class="timeline reveal">
+      <div class="tl-item"><span class="tl-dur">[Organisation]</span><h3>[Role]</h3><p>[What you did.]</p></div>
+      <div class="tl-item"><span class="tl-dur">[Organisation]</span><h3>[Role]</h3><p>[What you did.]</p></div>
+    </div>
+  </section>
+
+  <!-- PROJECTS: <a> = clickable note, <div> = not published yet -->
+  <section id="projects">
+    <h2 class="section-title reveal">Projects</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#9BDD97" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">[A few things you've built.]</p>
+    <div class="grid reveal">
+      <a class="sticky-note note-pink tilt-a" href="project1.html">
+        <span class="tag">PROJECT 01 · LIVE</span><h3>[Project name]</h3><p>[Short description.]</p>
+      </a>
+      <a class="sticky-note note-blue tilt-b" href="https://example.com" target="_blank" rel="noopener">
+        <span class="tag">PROJECT 02 · LIVE</span><h3>[Project name]</h3><p>[Short description.]</p>
+      </a>
+      <div class="sticky-note note-orange tilt-d">
+        <span class="tag">PROJECT 03</span><h3>[Project name]</h3><p>[Why it isn't published yet.]</p>
+      </div>
+      <div class="add-project">NEW PROJECTS WILL BE PUBLISHED SOON</div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2 class="section-title reveal">Contact</h2>
+    <svg class="title-underline reveal" viewBox="0 0 120 10"><path d="M2 6 Q 20 2, 40 6 T 80 6 T 118 5" stroke="#F4AE6B" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+    <p class="lede reveal">The easiest ways to reach me.</p>
+    <div class="grid reveal contact">
+      <a class="sticky-note note-yellow tilt-b" id="email-link" href="mailto:you@example.com" data-email="you@example.com">
+        <span class="tag">MAIL</span><h3>Mail</h3><p>you@example.com</p>
+      </a>
+      <a class="sticky-note note-blue tilt-c" href="https://www.linkedin.com/in/YOUR-HANDLE/" target="_blank" rel="noopener">
+        <span class="tag">LINKEDIN</span><h3>LinkedIn</h3><p>linkedin.com/in/YOUR-HANDLE</p>
+      </a>
+      <a class="sticky-note note-green tilt-a" href="https://github.com/YOUR-HANDLE" target="_blank" rel="noopener">
+        <span class="tag">GITHUB</span><h3>GitHub</h3><p>github.com/YOUR-HANDLE</p>
+      </a>
+      <a class="sticky-note note-orange tilt-d" href="tel:+0000000000">
+        <span class="tag">PHONE</span><h3>Phone</h3><p>+00 0000000000</p>
+      </a>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">[YOUR NAME] — [YOUR UNIVERSITY]</div></footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 0. Dark mode (remembered in localStorage)
+  var tt = document.getElementById('theme-toggle'), saved = null;
+  try { saved = localStorage.getItem('theme'); } catch(e){}
+  if (saved === 'dark'){ document.body.classList.add('dark'); tt.textContent = '☀️'; }
+  tt.addEventListener('click', function(){
+    var d = document.body.classList.toggle('dark');
+    tt.textContent = d ? '☀️' : '🌙';
+    try { localStorage.setItem('theme', d ? 'dark' : 'light'); } catch(e){}
+  });
+
+  // 1. Active tab + progress bar
+  var secs = document.querySelectorAll('section[id]'), links = document.querySelectorAll('nav.links a'),
+      pb = document.getElementById('progress-bar');
+  function onScroll(){
+    var pos = window.scrollY + 140, cur = null;
+    secs.forEach(function(s){ if (s.offsetTop <= pos) cur = s.id; });
+    links.forEach(function(l){ l.classList.toggle('active', l.getAttribute('href') === '#' + cur); });
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    pb.style.width = (h > 0 ? window.scrollY / h * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', onScroll, { passive:true });
+  onScroll();
+
+  // 2. Mobile menu
+  var nt = document.getElementById('nav-toggle'), nl = document.getElementById('nav-links');
+  nt.addEventListener('click', function(){
+    var o = nt.classList.toggle('open'); nl.classList.toggle('open', o); nt.setAttribute('aria-expanded', o);
+  });
+  nl.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ nt.classList.remove('open'); nl.classList.remove('open'); });
+  });
+
+  // 3. Floating-dots background
+  var cv = document.getElementById('hero-canvas'), ctx = cv.getContext('2d'), ps = [], m = {x:null,y:null}, COUNT = 60, MAX = 130;
+  function init(){
+    cv.width = innerWidth; cv.height = innerHeight; ps = [];
+    for (var i = 0; i < COUNT; i++) ps.push({x:Math.random()*cv.width, y:Math.random()*cv.height,
+      vx:(Math.random()-.5)*.2, vy:(Math.random()-.5)*.2, r:Math.random()*1.4+1});
+  }
+  init();
+  addEventListener('resize', init);
+  addEventListener('mousemove', function(e){ m.x = e.clientX; m.y = e.clientY; });
+  function frame(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var c = document.body.classList.contains('dark') ? '237,232,220' : '44,42,37';
+    ps.forEach(function(p){
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > cv.width) p.vx *= -1;
+      if (p.y < 0 || p.y > cv.height) p.vy *= -1;
+      if (m.x !== null){ var dx = p.x-m.x, dy = p.y-m.y, d = Math.sqrt(dx*dx+dy*dy); if (d < 90 && d > 0){ p.x += dx/d*.5; p.y += dy/d*.5; } }
+    });
+    for (var i = 0; i < ps.length; i++) for (var j = i+1; j < ps.length; j++){
+      var dx = ps[i].x-ps[j].x, dy = ps[i].y-ps[j].y, d = Math.sqrt(dx*dx+dy*dy);
+      if (d < MAX){ ctx.strokeStyle = 'rgba('+c+','+(.14*(1-d/MAX))+')'; ctx.beginPath(); ctx.moveTo(ps[i].x,ps[i].y); ctx.lineTo(ps[j].x,ps[j].y); ctx.stroke(); }
+    }
+    ps.forEach(function(p){ ctx.fillStyle = 'rgba('+c+',.45)'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill(); });
+    if (!reduceMotion) requestAnimationFrame(frame);
+  }
+  frame();
+
+  // 4. Click-to-copy email
+  var em = document.getElementById('email-link');
+  em.addEventListener('click', function(e){
+    var addr = em.getAttribute('data-email');
+    if (navigator.clipboard && addr){
+      e.preventDefault();
+      navigator.clipboard.writeText(addr).then(function(){
+        em.classList.add('copied'); setTimeout(function(){ em.classList.remove('copied'); }, 1800);
+      }).catch(function(){ location.href = 'mailto:' + addr; });
+    }
+  });
+
+  // 5. Scroll reveal (big blocks alternate left/right)
+  var idx = 0;
+  document.querySelectorAll('.reveal').forEach(function(el){
+    if (el.matches('.about-body,.grid,.timeline')){
+      el.classList.remove('reveal'); el.classList.add(idx++ % 2 ? 'reveal-right' : 'reveal-left');
+    }
+  });
+  var rev = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
+    }, { threshold:.15 });
+    rev.forEach(function(el){ io.observe(el); });
+  } else rev.forEach(function(el){ el.classList.add('in-view'); });
+
+  // 6. Skill bars
+  var bars = document.querySelectorAll('.bar-fill');
+  if ('IntersectionObserver' in window){
+    var bio = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ e.target.style.width = e.target.getAttribute('data-level') + '%'; bio.unobserve(e.target); } });
+    }, { threshold:.4 });
+    bars.forEach(function(b){ bio.observe(b); });
+  } else bars.forEach(function(b){ b.style.width = b.getAttribute('data-level') + '%'; });
+
+  // 7. Rotating word — edit this list
+  var rw = document.getElementById('rotate-word'), words = ['building things','writing code','learning daily','shipping projects'], wi = 0;
+  rw.style.transition = 'opacity .3s';
+  setInterval(function(){
+    wi = (wi + 1) % words.length; rw.style.opacity = 0;
+    setTimeout(function(){ rw.textContent = words[wi]; rw.style.opacity = 1; }, 300);
+  }, 2600);
+})();
+</script>
+</body>
+</html>
