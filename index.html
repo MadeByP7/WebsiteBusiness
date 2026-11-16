@@ -186,6 +186,9 @@ section { padding-block: 56px; }
 
 .tpl-side { display: flex; flex-direction: column; gap: 26px; }
 .tpl-side .note { --rot: 1.5deg; max-width: 340px; }
+a.note { display: block; text-decoration: none; cursor: pointer; transition: transform .25s, box-shadow .25s; }
+a.note:hover, a.note:focus-visible { transform: rotate(0deg) translateY(-6px) scale(1.03); box-shadow: 0 1px 1px rgba(0,0,0,.2), 12px 22px 30px rgba(0,0,0,.35); }
+a.note .open { display: block; margin-top: 12px; font-size: 13px; font-weight: 700; }
 .tpl-side h4 { font-size: 18px; margin-bottom: 10px; }
 .tpl-side p { color: var(--muted); }
 .pages { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -312,11 +315,12 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; margin-top
     <div class="tpl-item"><span class="idx">a.</span><h4>Student portfolio</h4><span class="mono">Notebook themed</span></div>
 
     <div class="tpl-side">
-      <div class="note y">
+      <a class="note y" href="./TempletA%28StudentPortfolio%29.html">
         <span class="tag">template a</span>
         Student portfolio
         <small>A portfolio that looks like a school notebook: ruled paper, a red margin line, spiral binding and coloured tabs.</small>
-      </div>
+        <span class="open">Open template &rarr;</span>
+      </a>
     </div>
   </section>
 
